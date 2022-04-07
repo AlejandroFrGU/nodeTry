@@ -1,32 +1,20 @@
 name: CI
 
 on:
-  push:
-    branches: [ main ] 
   pull_request:
     branches: [ main ]
-  workflow_dispatch:
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     container: node:16-alpine
-
-#     steps:
-#       - uses: actions/checkout@v2
-
-#       - name: Install dependencies
-#         run: npm install
-
-#       - name: Test
-#         uses: mattallty/jest-github-action@v1
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         with:
-#           test-command: "npm run coverage-jenkins"
-
-#       - uses: actions/upload-artifact@v2
-#         if: success() || failure()
-#         with:
-#           name: test-results
-#           path: ./coverage/
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
