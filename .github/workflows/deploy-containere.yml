@@ -10,6 +10,7 @@ on:
 env:
   GITHUB_SHA: ${{ github.sha }} 
   GITHUB_REF: ${{ github.ref }} 
+  BUILD_ID: ${{ env.BUILD_ID }}
   IMAGE: nodetry
   REGISTRY_HOSTNAME: gcr.io
 
@@ -44,7 +45,7 @@ jobs:
       run: |
         export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
         echo $TAG
-        docker build -t "$REGISTRY_HOSTNAME"/"$IMAGE":"$TAG" \
+        docker build -t "$REGISTRY_HOSTNAME"/"$IMAGE":"$BUILD_ID" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" .
 
@@ -53,6 +54,6 @@ jobs:
       run: |
         export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
         echo $TAG
-        docker push "$REGISTRY_HOSTNAME"/"$IMAGE":"$TAG"
-        docker tag "$REGISTRY_HOSTNAME"/"$IMAGE":"$TAG" "$REGISTRY_HOSTNAME"/"$IMAGE":latest
+        docker push "$REGISTRY_HOSTNAME"/"$IMAGE":"$BUILD_ID"
+        docker tag "$REGISTRY_HOSTNAME"/"$IMAGE":"$BUILD_ID" "$REGISTRY_HOSTNAME"/"$IMAGE":latest
         docker push "$REGISTRY_HOSTNAME"/"$IMAGE":latest
