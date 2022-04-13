@@ -24,15 +24,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: trying this action
-      uses: raccoondev/push-docker-gcr@v1
+    - uses: google-github-actions/setup-gcloud@master
+    - uses: RafikFarhad/push-to-gcr-github-action@v4
       with:
-        gcr_host: gcr.io
-        image_name: nodetry
+        gcloud_service_key: ${{ secrets.GCR_KEY }}
+        registry: gcr.io
+        project_id: ${{ PROJ_ID }}
+        image_name: ${{ IMAGE }}
         image_tag: latest
-        env:
-          GCLOUD_SERVICE_KEY: ${{ secrets.GCR_KEY }}
-          GOOGLE_PROJECT_ID: ${{ secrets.PROJ_ID }}
+
     # # Setup gcloud CLI
     # # - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
     # #   with:
