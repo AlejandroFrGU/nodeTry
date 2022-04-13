@@ -25,13 +25,13 @@ jobs:
       uses: actions/checkout@v2
     - name: trying this action
       uses: raccoondev/push-docker-gcr
-        with:
-          gcr_host: eu.gcr.io
-          image_name: nodetry
-          image_tag: latest
-          env:
-            GCLOUD_SERVICE_KEY: ${{ secrets.GCR_KEY }}
-            GOOGLE_PROJECT_ID: ${{ secrets.PROJ_ID }}
+      with:
+        gcr_host: eu.gcr.io
+        image_name: nodetry
+        image_tag: latest
+        env:
+          GCLOUD_SERVICE_KEY: ${{ secrets.GCR_KEY }}
+          GOOGLE_PROJECT_ID: ${{ secrets.PROJ_ID }}
     # # Setup gcloud CLI
     # # - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
     # #   with:
