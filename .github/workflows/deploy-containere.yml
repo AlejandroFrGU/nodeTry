@@ -29,8 +29,8 @@ jobs:
       with:
         gcloud_service_key: ${{ secrets.GCR_KEY }}
         registry: gcr.io
-        project_id: ${{ PROJ_ID }}
-        image_name: ${{ IMAGE }}
+        project_id: $PROJECT_ID
+        image_name: $IMAGE
         image_tag: latest
 
     # # Setup gcloud CLI
