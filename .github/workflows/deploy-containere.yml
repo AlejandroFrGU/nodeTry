@@ -23,33 +23,51 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v2
-
-    # Setup gcloud CLI
-    # - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-    #   with:
-    #     version: '270.0.0'
-    #     service_account_key: ${{ secrets.GCR_KEY }} 
-    - name: Setup Google Cloud SDK
-      uses: mathieu-bour/setup-gcloud@1.3.0
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v1.1.0
       with:
-        service-account-key: ${{ secrets.GCR_KEY }} # base64-encoded service account JSON key
-        confgure-docker: true
-    # Configure docker to use the gcloud command-line tool as a credential helper
-    - run: |
-        # Set up docker to authenticate
-        # via gcloud command-line tool.
-        gcloud auth configure-docker
+        # Username used to log in to a Docker registry. If not set then no login will occur
+        username: _json_key
+        # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
+        password: ${{ secrets.GCR_KEY }}
+        # Server address of Docker registry. If not set then will default to Docker Hub
+        registry: gcr.io
+        # Docker repository to tag the image with
+        repository: ${{ secrets.PROJ_ID }}/<DOCKER IMAGE NAME>
+        # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
+        tags: latest
+        # Automatically tags the built image with the git reference as per the readme
+        tag_with_ref: true
+        # Automatically tags the built image with the git short SHA as per the readme
+        tag_with_sha: true
+        # Comma-delimited list of labels to add to the built image
+        labels: github-action-build
+        # Whether to push the image
+        push: true
+    # # Setup gcloud CLI
+    # # - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+    # #   with:
+    # #     version: '270.0.0'
+    # #     service_account_key: ${{ secrets.GCR_KEY }} 
+    # - name: Setup Google Cloud SDK
+    #   uses: mathieu-bour/setup-gcloud@1.3.0
+    #   with:
+    #     service-account-key: ${{ secrets.GCR_KEY }} # base64-encoded service account JSON key
+    #     confgure-docker: true
+    # # Configure docker to use the gcloud command-line tool as a credential helper
+    # - run: |
+    #     # Set up docker to authenticate
+    #     # via gcloud command-line tool.
+    #     gcloud auth configure-docker
 
-    # Build the Docker image
-    - name: Build
-      run: |
-        docker build -t "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$IMAGE":"$GITHUB_SHA" \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" .
+    # # Build the Docker image
+    # - name: Build
+    #   run: |
+    #     docker build -t "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$IMAGE":"$GITHUB_SHA" .
 
-    # Push the Docker image to Google Container Registry
-    - name: Publish
-      run: |
-        docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$IMAGE":"$GITHUB_SHA"
-        docker tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$IMAGE":"$GITHUB_SHA" "$REGISTRY_HOSTNAME"/"$IMAGE":latest
-        docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$IMAGE":latest
+    # # Push the Docker image to Google Container Registry
+    # - name: Publish
+    #   run: |
+    #     docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$IMAGE":"$GITHUB_SHA"
+    #     docker tag "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$IMAGE":"$GITHUB_SHA" "$REGISTRY_HOSTNAME"/"$IMAGE":latest
+    #     docker push "$REGISTRY_HOSTNAME"/"$PROJECT_ID"/"$IMAGE":latest
