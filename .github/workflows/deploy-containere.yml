@@ -23,10 +23,11 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v2
+
     - name: trying this action
-      uses: raccoondev/push-docker-gcr
+      uses: raccoondev/push-docker-gcr@v1
       with:
-        gcr_host: eu.gcr.io
+        gcr_host: gcr.io
         image_name: nodetry
         image_tag: latest
         env:
