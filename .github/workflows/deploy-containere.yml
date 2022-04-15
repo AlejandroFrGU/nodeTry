@@ -15,7 +15,7 @@ env:
   PROJECT_ID: ${{ secrets.PROJ_ID}}
   SERVICE: nodetry
   REGION: us-central1
-  KEY: {{ secrets.GCR_KEY }}
+  KEY: ${{ secrets.GCR_KEY }}
 
 
 jobs:
